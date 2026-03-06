@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TrendingUp, Palette, Megaphone, Users, CheckCircle } from 'lucide-react';
-import PromoImage from '../assets/Image/woman.png'; 
+import PromoImage from '../assets/Image/man.png'; 
 
 const HeroCard = () => {
   return (
