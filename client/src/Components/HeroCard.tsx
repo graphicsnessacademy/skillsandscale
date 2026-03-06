@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TrendingUp, Palette, Megaphone, Users, CheckCircle } from 'lucide-react';
+import PromoImage from '../assets/Image/woman.png'; 
 
 const HeroCard = () => {
   return (
@@ -119,10 +120,7 @@ const HeroCard = () => {
 
           {/* --- MAN IMAGE --- */}
           <div className="image-container absolute z-30 image-mask">
-            <img
-              src="src/assets/Image/woman.png"
-              alt="Man with Laptop"
-            />
+            <img src={PromoImage} alt="Skills and Scale Promo" />
           </div>
 
           {/* --- MAIN DASHBOARD --- */}
