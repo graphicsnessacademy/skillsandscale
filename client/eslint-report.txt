@@ -1,0 +1,13 @@
+﻿
+C:\Users\FC\Desktop\graphicsness\client\src\Pages\Admin\Settings.tsx
+  41:17  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+C:\Users\FC\Desktop\graphicsness\client\src\Pages\Home.tsx
+  139:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\FC\Desktop\graphicsness\client\src\utils\IconRegistry.tsx
+  27:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+Γ£û 3 problems (1 error, 2 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

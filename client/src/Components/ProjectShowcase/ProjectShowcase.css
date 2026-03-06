@@ -1,0 +1,242 @@
+/* client/src/Components/ProjectShowcase.css */
+
+.showcase-bento-section {
+    padding: 80px 0;
+  background-color: rgb(249 250 251);
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+.dark .showcase-bento-section {
+  background-color: #0b0f19; /* Deep dark background */
+}
+
+/* Intro Section */
+.intro-section {
+    text-align: center;
+  max-width: 800px;
+  margin: 0 auto 0px;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.intro-section h2 {
+font-size: clamp(24px, 5vw, 56px); /* Adjusted clamp for mobile safety */
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  color: #111827;
+  line-height: 1.1;
+}
+.dark .intro-section h2 { color: #ffffff; }
+
+
+.intro-section p {
+color: #4b5563;
+  margin-bottom: 32px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dark .intro-section p { color: #9ca3af; }
+
+.cta-button-bento { background-color: #111827;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+  font-size: 14px;
+}
+.dark .cta-button-bento { background-color: #ffffff; color: #000000; }
+.cta-button-bento:hover {
+  background-color: #374151;
+  transform: scale(1.05);
+}
+/* Gallery Layout - Compact & Responsive */
+.gallery-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 4vw; /* Responsive side padding */
+}
+
+.gallery-container-bento {
+  position: relative;
+  width: 100%;
+  max-width: 950px;
+  /* This ensures the layout shape stays EXACTLY the same at any size */
+  aspect-ratio: 950 / 400; 
+}
+
+/* Base Card Styles */
+.work-card-bento {
+   position: absolute;
+  /* Border radius scales with viewport so it doesn't look too round on mobile */
+  border-radius: clamp(4px, 1.5vw, 20px); 
+  overflow: hidden;
+  background: #f3f4f6;
+  
+  /* Initial State */
+  opacity: 0;
+  transform: translateY(20px);
+  
+  /* Animations */
+  transition: 
+    opacity 0.8s ease-out, 
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    box-shadow 0.4s ease, 
+    z-index 0s;
+    
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  
+  /* Custom Vars for Parallax */
+  --card-x: 0.5;
+  --card-y: 0.5;
+}
+
+.card-1:hover .slider-divider-bento {
+  opacity: 1; /* Only show when hovering the card */
+}
+
+
+.slider-divider-bento {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  visibility: hidden;
+  z-index: 50;
+  pointer-events: none;
+  transform: translateX(-50%);
+  /* Disable transition for Pos while moving to prevent lag, 
+     but you can add a tiny 0.1s ease for smoothness if desired */
+  transition: opacity 0.3s ease;
+  opacity: 0; /* Hidden by default */
+}
+.slider-handle-bento {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  visibility: hidden;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  color: black;
+}
+
+.dark .work-card-bento { background: #1e293b; 
+}
+
+/* Entrance Active State */
+.work-card-bento.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Hover State */
+.work-card-bento:hover {
+   /* Bring to top */
+transform: scale(1.2);
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+Image Parallax Logic 
+Uses local --card-x/y vars set by JS on specific card
+*/
+.img-wrapper-bento { position: absolute; inset: 0; overflow: hidden; }
+.img-layer-bento {
+ position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.1s linear;
+  transform: translate(
+    calc((var(--card-x) - 0.5) * -5%), /* Used % instead of px for responsive movement */
+    calc((var(--card-y) - 0.5) * -5%)
+  ) scale(1.1);
+}
+
+.img-layer-bento.grayscale { filter: grayscale(100%); }
+
+/* Card Positions */
+.card-1 { width: 57.89%; height: 85%; left: 20%; top: 10%; z-index: 20; transition-delay: 0.2s; }
+.card-2 { width: 26.31%; height: 37.5%; left: 0%; top: 0%; z-index: 10; transition-delay: 0.1s; }
+.card-3 { width: 21.05%; height: 62.5%; left: 78.94%; top: 0%; z-index: 15; transition-delay: 0.3s; }
+.card-4 { width: 12.63%; height: 40%; left: 6.31%; top: 40%; z-index: 15; transition-delay: 0.4s; }
+.card-5 { width: 15.78%; height: 25%; left: 78.94%; top: 65%; z-index: 15; transition-delay: 0.5s; }
+/* Slider Specifics */
+.slider-after-bento { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.slider-divider-bento {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: rgba(255,255,255,0.8);
+  z-index: 50; transform: translateX(-50%); pointer-events: none;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+
+.slider-input-native {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: ew-resize; z-index: 100;
+}
+.card-num-bento {
+    position: absolute; top: 5%; left: 5%;
+  font-size: clamp(12px, 4vw, 48px); /* Aggressive clamp to shrink number on mobile */
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.3);
+  z-index: 60; pointer-events: none;
+  line-height: 1;
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  color: white;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+.work-card-bento:hover .preview-overlay {
+  opacity: 1;
+}
+
+
+
+
+@media (hover: hover) {
+  .work-card-bento:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25);
+    
+  }
+}
+
+
+/* Responsive Scaling */
+@media (max-width: 1024px) {
+    .gallery-container-bento { max-width: 100%; aspect-ratio: 16/8; }
+}
+
+@media (max-width: 768px) {
+  .showcase-bento-section {
+    padding: 40px 0;
+  }
+  
+  .intro-section { 
+    margin-bottom: 20px; 
+    padding: 0 15px;
+  }
+  
+}
