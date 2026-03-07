@@ -3,16 +3,22 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required'],
+    trim: true,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Email is required'],
     unique: true,
+    lowercase: true, // Forces "Admin@Gmail.com" to "admin@gmail.com"
+    trim: true,
+    // Strict email regex validation
+    match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email address'],
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Password is required'],
+    // Note: Hashing is handled by bcrypt in the auth controller
   },
   role: {
     type: String,
@@ -22,6 +28,7 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     default: '',
+    trim: true,
   },
   enrolledCourses: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -36,6 +43,9 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+
+userSchema.index({ email: 1 });
 
 const User = mongoose.model('User', userSchema);
 
