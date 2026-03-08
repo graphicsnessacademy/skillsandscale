@@ -36,18 +36,24 @@ interface DashboardData {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
+// ✅ BDT: using ৳ symbol, amounts in Taka
 const fmt = (v: number, prefix = '') =>
   v >= 1000 ? `${prefix}${(v / 1000).toFixed(1)}k` : `${prefix}${v}`;
 
-const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; dataKey: string; color: string }[]; label?: string }) => {
+const CustomTooltip = ({ active, payload, label }: {
+  active?: boolean;
+  payload?: { name: string; value: number; dataKey: string; color: string }[];
+  label?: string
+}) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-slate-900 text-white text-xs rounded-xl px-4 py-3 shadow-2xl border border-slate-700">
       <p className="font-black uppercase tracking-widest mb-2 text-slate-400">{label}</p>
       {payload.map((p) => (
         <p key={p.dataKey} style={{ color: p.color }} className="font-bold">
+          {/* ✅ BDT Tooltip */}
           {p.name}: {typeof p.value === 'number' && p.value > 999
-            ? `$${(p.value / 1000).toFixed(1)}k`
+            ? `৳${(p.value / 1000).toFixed(1)}k`
             : p.value}
         </p>
       ))}
@@ -56,7 +62,12 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 };
 
 // ── Sub-components ─────────────────────────────────────────────────────────
-const KpiCard = ({ card, index }: { card: { name: string; value: string | number; icon: React.ReactNode; color: string; trend: number | null }; index: number }) => (
+const KpiCard = ({ card, index }: {
+  card: {
+    name: string; value: string | number;
+    icon: React.ReactNode; color: string; trend: number | null
+  }; index: number
+}) => (
   <div
     className="bg-white dark:bg-slate-900 p-5 rounded-[1.75rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
     style={{ animationDelay: `${index * 60}ms`, animation: 'fadeSlideUp 0.5s ease both' }}
@@ -77,7 +88,9 @@ const KpiCard = ({ card, index }: { card: { name: string; value: string | number
   </div>
 );
 
-const SectionHeader = ({ icon, title, action }: { icon: React.ReactNode; title: string; action?: string }) => (
+const SectionHeader = ({ icon, title, action }: {
+  icon: React.ReactNode; title: string; action?: string
+}) => (
   <div className="flex items-center justify-between mb-5">
     <div className="flex items-center gap-2.5">
       <div className="p-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-lg">{icon}</div>
@@ -129,7 +142,8 @@ const Dashboard = () => {
   );
 
   const kpiCards = [
-    { name: 'Total Revenue', value: `$${fmt(data.totalRevenue)}`, icon: <DollarSign size={18} />, color: 'bg-emerald-500', trend: data.revenueGrowth },
+    // ✅ BDT: ৳ symbol for revenue
+    { name: 'Total Revenue', value: `৳${fmt(data.totalRevenue)}`, icon: <DollarSign size={18} />, color: 'bg-emerald-500', trend: data.revenueGrowth },
     { name: 'Active Students', value: fmt(data.activeStudents), icon: <Users size={18} />, color: 'bg-blue-500', trend: data.studentGrowth },
     { name: 'Total Courses', value: data.totalCourses, icon: <BookOpen size={18} />, color: 'bg-indigo-500', trend: null },
     { name: 'Pending Certs', value: data.pendingCertificates, icon: <ShieldCheck size={18} />, color: 'bg-orange-500', trend: null },
@@ -197,7 +211,8 @@ const Dashboard = () => {
                 <div className="flex gap-6 mb-5">
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Total Revenue</p>
-                    <p className="text-2xl font-black text-slate-900 dark:text-white">${fmt(data.totalRevenue)}</p>
+                    {/* ✅ BDT */}
+                    <p className="text-2xl font-black text-slate-900 dark:text-white">৳{fmt(data.totalRevenue)}</p>
                     <p className="text-[10px] text-emerald-500 font-bold flex items-center gap-0.5">
                       <ArrowUpRight size={11} /> +{data.revenueGrowth}% vs last month
                     </p>
@@ -213,7 +228,13 @@ const Dashboard = () => {
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                     <XAxis dataKey="month" tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }} axisLine={false} tickLine={false} tickFormatter={v => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                    {/* ✅ BDT Y-Axis */}
+                    <YAxis
+                      tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }}
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={v => `৳${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
+                    />
                     <Tooltip content={<CustomTooltip />} />
                     <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#6366f1" strokeWidth={2.5} fill="url(#revGrad)" dot={false} />
                   </AreaChart>
@@ -307,11 +328,12 @@ const Dashboard = () => {
                       <p className="text-[10px] text-slate-400 font-medium truncate">{enr.course}</p>
                     </div>
                     <div className="text-right shrink-0">
+                      {/* ✅ Amount already formatted from backend — ensure backend sends ৳ prefix */}
                       <p className="text-xs font-black text-slate-800 dark:text-white">{enr.amount}</p>
                       <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${enr.status === 'ongoing' ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' :
-                        enr.status === 'completed' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
-                          enr.status === 'pending' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' :
-                            'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'
+                          enr.status === 'completed' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
+                            enr.status === 'pending' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' :
+                              'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'
                         }`}>
                         {enr.status}
                       </span>
@@ -345,6 +367,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                     <div className="text-right shrink-0 space-y-0.5">
+                      {/* ✅ Revenue already formatted from backend — ensure backend sends ৳ prefix */}
                       <p className="text-xs font-black text-emerald-600">{course.revenue}</p>
                       <p className="text-[10px] font-bold text-amber-500 flex items-center justify-end gap-0.5">
                         <Star size={9} fill="currentColor" /> {course.rating}
