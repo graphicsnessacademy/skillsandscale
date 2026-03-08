@@ -6,9 +6,25 @@ import api from '../../utils/api';
 interface Enrollment {
   _id: string;
   status: string;
-  paymentInfo: { verificationStatus: string; method?: string; mobile?: string; trxId?: string; transactionId?: string; screenshotUrl?: string };
-  certification: { isCertified: boolean; serialNumber?: string; issueDate?: string };
-  personalInfo: { fullName: string; email: string; phone: string; address?: string };
+  paymentInfo: {
+    verificationStatus: string;
+    method?: string;
+    mobile?: string;
+    trxId?: string;
+    transactionId?: string;
+    screenshotUrl?: string;
+  };
+  certification: {
+    isCertified: boolean;
+    serialNumber?: string;
+    issueDate?: string;
+  };
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    address?: string;
+  };
   amount: number;
   courseId: { title: string };
   createdAt: string;
@@ -18,7 +34,9 @@ interface Enrollment {
 const StudentManager = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [confirm, setConfirm] = useState({ isOpen: false, title: '', message: '', onConfirm: () => { } });
+  const [confirm, setConfirm] = useState({
+    isOpen: false, title: '', message: '', onConfirm: () => { }
+  });
   const [receiptPopup, setReceiptPopup] = useState<{
     isOpen: boolean; html: string; enrollmentId: string; isSending: boolean;
   }>({ isOpen: false, html: '', enrollmentId: '', isSending: false });
@@ -54,16 +72,24 @@ const StudentManager = () => {
     fetchData();
   };
 
+  // ✅ FIXED: was checking 'Verified' (capital V) — should be 'verified' (lowercase)
   const handleReceiptClick = async (id: string) => {
     try {
       const enrollment = enrollments.find(e => e._id === id);
       if (!enrollment) return;
-      if (enrollment.paymentInfo.verificationStatus !== 'Verified') {
-        alert('Receipts can only be generated for verified payments.');
+
+      if (enrollment.paymentInfo.verificationStatus !== 'verified') {
+        alert('❌ Payment must be VERIFIED before generating receipt.');
         return;
       }
+
       const res = await api.put(`/students/${id}/receipt-preview`);
-      setReceiptPopup({ isOpen: true, html: res.data.receiptHTML, enrollmentId: id, isSending: false });
+      setReceiptPopup({
+        isOpen: true,
+        html: res.data.receiptHTML,
+        enrollmentId: id,
+        isSending: false
+      });
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       alert('❌ ' + (err.response?.data?.message || 'Failed to generate receipt'));
@@ -239,10 +265,16 @@ const StudentManager = () => {
                         {item.paymentInfo.transactionId}
                       </span>
                     </div>
-                    <a href={item.paymentInfo.screenshotUrl} target="_blank" rel="noopener noreferrer"
-                      className="text-[9px] text-blue-500 hover:text-blue-600 font-bold uppercase underline">
-                      View Screenshot
-                    </a>
+                    {item.paymentInfo.screenshotUrl && (
+                      <a
+                        href={item.paymentInfo.screenshotUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[9px] text-blue-500 hover:text-blue-600 font-bold uppercase underline"
+                      >
+                        View Screenshot
+                      </a>
+                    )}
                   </td>
 
                   {/* 3. Verification */}
@@ -347,7 +379,9 @@ const StudentManager = () => {
                             <input
                               type="date"
                               className="bg-transparent text-[10px] font-bold outline-none dark:text-white"
-                              value={item.certification.issueDate ? new Date(item.certification.issueDate).toISOString().split('T')[0] : ''}
+                              value={item.certification.issueDate
+                                ? new Date(item.certification.issueDate).toISOString().split('T')[0]
+                                : ''}
                               onChange={(e) => updateDate(item._id, e.target.value)}
                             />
                           </div>

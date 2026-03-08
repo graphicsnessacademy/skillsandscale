@@ -1,5 +1,4 @@
 node_modules/
-dist/
 .env
 debug_output.txt
 *.zip

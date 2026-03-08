@@ -40,7 +40,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/admin/notifications', notificationRoutes);
+app.use('/api/admin/notifications', protect, admin, notificationRoutes);
 
 // cPanel dynamic port handling
 const PORT = process.env.PORT || 5000;

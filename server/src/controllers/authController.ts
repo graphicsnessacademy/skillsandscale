@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-
+import { triggerNotification } from '../utils/notificationHelper';
 
 // Generate JWT Token
 const generateToken = (id: string) => {
@@ -81,10 +81,21 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         $push: {
           loginHistory: {
             $each: [loginEntry],
-            $slice: -10 // Keep last 10
+            $slice: -10
           }
         }
       });
+
+      // 🔔 SECURITY NOTIFICATION — Admin logins only (master-admin eyes only)
+      if (user.role === 'master-admin' || user.role === 'sub-admin') {
+        await triggerNotification(
+          'security',
+          'Admin Login Detected',
+          `${user.name} logged in via ${browser} on ${device} (IP: ${String(ip)}).`,
+          '/admin/settings',
+          'master-admin' // 🔒 Only visible to Master Admin
+        );
+      }
 
       res.json({
         _id: user.id,
@@ -96,6 +107,43 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ── CHANGE PASSWORD ──────────────────────────────────────────────────────────
+export const changePassword = async (req: Request, res: Response): Promise<void> => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = (req as any).user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      res.status(401).json({ message: 'Current password is incorrect' });
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    // 🔔 SECURITY NOTIFICATION — master-admin only
+    await triggerNotification(
+      'security',
+      'Password Changed',
+      `${user.name}'s account password was changed successfully.`,
+      '/admin/settings',
+      'master-admin' // 🔒 Only visible to Master Admin
+    );
+
+    res.json({ success: true, message: 'Password updated successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

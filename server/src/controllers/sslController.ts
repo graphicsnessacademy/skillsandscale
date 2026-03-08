@@ -9,22 +9,16 @@ dotenv.config();
 
 const store_id = process.env.STORE_ID;
 const store_passwd = process.env.STORE_PASS;
-const is_live = false; // Change to true for production
+const is_live = process.env.NODE_ENV === 'production';
 
-/**
- * @desc    Initialize SSLCommerz Payment
- * @route   POST /api/payment/init
- */
 export const initPayment = async (req: Request, res: Response) => {
   try {
     const { courseId, personalInfo, courseInfo } = req.body;
-
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    const tran_id = `TRX${Date.now()}${Math.floor(Math.random() * 1000)}`;
+    const tran_id = `SS${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
-    // 1. Create a "Pending" record in Registry
     await Enrollment.create({
       course: courseId,
       personalInfo,
@@ -32,13 +26,12 @@ export const initPayment = async (req: Request, res: Response) => {
       paymentInfo: {
         method: 'SSLCommerz',
         transactionId: tran_id,
-        screenshotUrl: 'https://via.placeholder.com/150?text=Online+Payment',
+        screenshotUrl: 'online-payment',
         verificationStatus: 'pending'
       },
       status: 'pending'
     });
 
-    // 2. Prepare SSLCommerz Data
     const data = {
       total_amount: parseInt(course.price.replace(/[^0-9.]/g, '')),
       currency: 'BDT',
@@ -53,7 +46,7 @@ export const initPayment = async (req: Request, res: Response) => {
       product_profile: 'general',
       cus_name: personalInfo.fullName,
       cus_email: personalInfo.email,
-      cus_add1: personalInfo.address,
+      cus_add1: personalInfo.address || 'Dhaka',
       cus_city: 'Dhaka',
       cus_country: 'Bangladesh',
       cus_phone: personalInfo.phone,
@@ -64,7 +57,7 @@ export const initPayment = async (req: Request, res: Response) => {
       if (apiResponse.GatewayPageURL) {
         res.send({ url: apiResponse.GatewayPageURL });
       } else {
-        res.status(400).json({ message: "SSLCommerz Initialization Failed" });
+        res.status(400).json({ message: "Gateway connection failed" });
       }
     });
 
@@ -73,78 +66,62 @@ export const initPayment = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * @desc    Handle Successful Payment
- * @route   POST /api/payment/success/:tranId
- */
 export const paymentSuccess = async (req: Request, res: Response) => {
   try {
     const { tranId } = req.params;
+    const enrollment = await Enrollment.findOne({ 'paymentInfo.transactionId': tranId })
+      .populate('course', 'title');
 
-    const enrollment = await Enrollment.findOne({ 'paymentInfo.transactionId': tranId });
     if (!enrollment) return res.redirect(`${process.env.CLIENT_URL}/payment/fail`);
 
-    // --- AUTOMATION: APPLY BUSINESS OS RULES ---
-
-    // 1. Payment is automatically VERIFIED
+    // 1. Update Enrollment State
     enrollment.paymentInfo.verificationStatus = 'verified';
-
-    // 2. Receipt is marked as SENT (since gateway handles invoice)
     enrollment.receiptSent = true;
     enrollment.receiptSentAt = new Date();
-
-    // 3. Status is automatically set to ONGOING
     enrollment.status = 'ongoing';
+
+    // 2. Generate Serial Number
+    const year = new Date().getFullYear();
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    enrollment.certification.serialNumber = `SS${year}${rand}`;
 
     await enrollment.save();
 
-    // 🔔 TRIGGER NOTIFICATION
+    // 3. Trigger Notification
     await triggerNotification(
       'business',
-      'Online Sale Confirmed',
-      `৳${req.body.amount || 'Payment'} received from ${enrollment.personalInfo.fullName} via SSLCommerz.`,
+      'Online Enrollment Confirmed',
+      `${enrollment.personalInfo.fullName} paid via SSLCommerz for ${(enrollment.course as any)?.title}`,
       '/admin/students'
     );
 
     res.redirect(`${process.env.CLIENT_URL}/payment/success?trx=${tranId}`);
-
   } catch (error) {
     res.redirect(`${process.env.CLIENT_URL}/payment/fail`);
   }
 };
 
-/**
- * @desc    Handle Failed Payment
- * @route   POST /api/payment/fail/:tranId
- */
 export const paymentFail = async (req: Request, res: Response) => {
   try {
     const { tranId } = req.params;
     const enrollment = await Enrollment.findOne({ 'paymentInfo.transactionId': tranId });
-
     if (enrollment) {
-      // 🔔 TRIGGER NOTIFICATION (Loss Prevention)
+      enrollment.status = 'cancelled';
+      await enrollment.save();
+
       await triggerNotification(
         'business',
         'Payment Failed',
-        `Abandoned checkout by ${enrollment.personalInfo.fullName} (TrxID: ${tranId}).`,
+        `Abandoned checkout by ${enrollment.personalInfo.fullName}`,
         '/admin/students'
       );
-
-      // Optional: Keep record but mark as cancelled
-      enrollment.status = 'cancelled';
-      await enrollment.save();
     }
-
     res.redirect(`${process.env.CLIENT_URL}/payment/fail`);
   } catch (error) {
     res.redirect(`${process.env.CLIENT_URL}/payment/fail`);
   }
 };
 
-/**
- * @desc    Handle Cancelled Payment
- */
 export const paymentCancel = async (req: Request, res: Response) => {
   res.redirect(`${process.env.CLIENT_URL}/payment/fail?reason=cancelled`);
 };

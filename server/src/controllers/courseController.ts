@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import Course from '../models/Course';
 import Enrollment from '../models/Enrollment';
+import { triggerNotification } from '../utils/notificationHelper';
 
 export const getCourses = async (req: Request, res: Response) => {
   try {
-    const courses = await Course.find({}).sort({ createdAt: -1 }); // Newest first
+    const courses = await Course.find({}).sort({ createdAt: -1 });
     res.json(courses);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -28,11 +29,10 @@ export const createCourse = async (req: Request, res: Response) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Course image is required' });
 
-    // Destructure new fields
     const {
       title, description, duration, category,
       nextBatch, batchName, outline,
-      originalPrice, discount, price, // Pricing fields
+      originalPrice, discount, price,
       students, reviews
     } = req.body;
 
@@ -40,13 +40,22 @@ export const createCourse = async (req: Request, res: Response) => {
 
     const course = new Course({
       title, description, duration, category, batchName, nextBatch,
-      originalPrice, discount, price, // Save pricing logic
+      originalPrice, discount, price,
       students, reviews,
       image: req.file.path,
       outline: parsedOutline
     });
 
     const createdCourse = await course.save();
+
+    // 🔔 NOTIFICATION
+    await triggerNotification(
+      'business',
+      'New Course Published',
+      `"${title}" has been added to the course catalog.`,
+      '/admin/courses'
+    );
+
     res.status(201).json(createdCourse);
   } catch (error: any) {
     res.status(400).json({ message: 'Failed to create course', error: error.message });
@@ -58,7 +67,17 @@ export const deleteCourse = async (req: Request, res: Response) => {
     const course = await Course.findById(req.params.id);
 
     if (course) {
+      const title = course.title;
       await course.deleteOne();
+
+      // 🔔 NOTIFICATION
+      await triggerNotification(
+        'business',
+        'Course Deleted',
+        `"${title}" has been removed from the catalog.`,
+        '/admin/courses'
+      );
+
       res.json({ message: 'Course removed' });
     } else {
       res.status(404).json({ message: 'Course not found' });
@@ -80,7 +99,6 @@ export const updateCourse = async (req: Request, res: Response) => {
       students, reviews
     } = req.body;
 
-    // Update fields
     if (title) course.title = title;
     if (description) course.description = description;
     if (duration) course.duration = duration;
@@ -89,16 +107,22 @@ export const updateCourse = async (req: Request, res: Response) => {
     if (batchName) course.batchName = batchName;
     if (students) course.students = students;
     if (reviews) course.reviews = reviews;
-
-    // Update Pricing
     if (originalPrice) course.originalPrice = originalPrice;
     if (discount !== undefined) course.discount = discount;
     if (price) course.price = price;
-
     if (req.file) course.image = req.file.path;
     if (outline) course.outline = typeof outline === 'string' ? JSON.parse(outline) : outline;
 
     const updatedCourse = await course.save();
+
+    // 🔔 NOTIFICATION
+    await triggerNotification(
+      'business',
+      'Course Updated',
+      `"${updatedCourse.title}" course details have been modified.`,
+      '/admin/courses'
+    );
+
     res.json(updatedCourse);
   } catch (error: any) {
     res.status(500).json({ message: 'Update failed', error: error.message });
@@ -107,52 +131,33 @@ export const updateCourse = async (req: Request, res: Response) => {
 
 export const bookCourse = async (req: Request, res: Response): Promise<void> => {
   try {
-    // 1. Check if file exists
     if (!req.file) {
       res.status(400).json({ message: 'Receipt screenshot is required' });
       return;
     }
 
-    // 2. Extract Text Data (FormData sends everything as strings)
     const {
-      courseId,
-      studentId, // Optional: if user is logged in
-      fullName,
-      email,
-      phone,
-      address,
-      batchNumber,
-      transactionId,
-      paymentMethod
+      courseId, studentId, fullName, email,
+      phone, address, batchNumber,
+      transactionId, paymentMethod
     } = req.body;
 
-    // 3. Create Enrollment Object
     const enrollment = new Enrollment({
-      student: studentId || null, // Link to user if available
+      student: studentId || null,
       course: courseId,
-      personalInfo: {
-        fullName,
-        email,
-        phone,
-        address
-      },
-      courseInfo: {
-        batchNumber
-      },
+      personalInfo: { fullName, email, phone, address },
+      courseInfo: { batchNumber },
       paymentInfo: {
         method: paymentMethod || 'Bank Transfer',
         transactionId,
-        screenshotUrl: req.file.path, // Cloudinary URL
+        screenshotUrl: req.file.path,
         verificationStatus: 'pending'
       },
       status: 'pending'
     });
 
-    // 4. Save to DB
     await enrollment.save();
-
     res.status(201).json({ message: 'Booking submitted successfully!', enrollmentId: enrollment._id });
-
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: 'Booking failed', error: error.message });
