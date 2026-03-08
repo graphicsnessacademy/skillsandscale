@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@100..900&family=Noto+Sans+Devanagari:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar hiding */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Grid Background Utility */
+.bg-grid-gray-200\/50 {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='gray' stroke-opacity='0.2'%3e%3cpath d='M32 0H0v32'/%3e%3c/svg%3e");
+}
+
+.dark .bg-grid-gray-800\/20 {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='white' stroke-opacity='0.2'%3e%3cpath d='M32 0H0v32'/%3e%3c/svg%3e");
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.0;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0.0;
+  }
+}
+
+.circle1 {
+  animation: pulse 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.circle2 {
+  animation: pulse 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  animation-delay: 2s;
+}
+
+.circle3 {
+  animation: pulse 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  animation-delay: 4s;
+}
+
+/* Scroll Animation Utility Class */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

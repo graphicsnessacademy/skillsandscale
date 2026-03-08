@@ -1,0 +1,121 @@
+|  ├── postcss.config.js
+|  ├── public
+|  |  └── vite.svg
+|  ├── README.md
+|  ├── src
+|  |  ├── App.css
+|  |  ├── App.tsx
+|  |  ├── assets
+|  |  |  ├── Image
+|  |  |  ├── Logo.png
+|  |  |  ├── Logowhite.png
+|  |  |  └── react.svg
+|  |  ├── Components
+|  |  |  ├── Admin
+|  |  |  ├── BookingModal.tsx
+|  |  |  ├── Footer.tsx
+|  |  |  ├── Header.tsx
+|  |  |  ├── HeroCard.tsx
+|  |  |  ├── Home.css
+|  |  |  ├── ProjectShowcase
+|  |  |  ├── ProtectedRoute.tsx
+|  |  |  ├── ScrollToTop.tsx
+|  |  |  └── SmartNotFound.tsx
+|  |  ├── context
+|  |  |  └── AuthContext.tsx
+|  |  ├── Data
+|  |  |  ├── coursesData.ts
+|  |  |  └── servicesData.tsx
+|  |  ├── index.css
+|  |  ├── main.tsx
+|  |  ├── Pages
+|  |  |  ├── Admin
+|  |  |  ├── Certification.tsx
+|  |  |  ├── Contact.tsx
+|  |  |  ├── CourseDetail.tsx
+|  |  |  ├── Courses.tsx
+|  |  |  ├── Home.tsx
+|  |  |  ├── Login.tsx
+|  |  |  ├── NotFound.tsx
+|  |  |  ├── PaymentFail.tsx
+|  |  |  ├── PaymentSuccess.tsx
+|  |  |  ├── Search.tsx
+|  |  |  ├── Services.tsx
+|  |  |  ├── SignUp.tsx
+|  |  |  └── Team.tsx
+|  |  ├── types
+|  |  |  └── notification.ts
+|  |  └── utils
+|  |     ├── api.ts
+|  |     └── IconRegistry.tsx
+|  ├── tailwind.config.js
+|  ├── tsconfig.app.json
+|  ├── tsconfig.json
+|  ├── tsconfig.node.json
+|  └── vite.config.ts
+├── directory_structure.txt
+├── package-lock.json
+├── package.json
+└── server
+   ├── debug_output.txt
+   ├── package-lock.json
+   ├── package.json
+   ├── src
+   |  ├── check-db.ts
+   |  ├── config
+   |  |  ├── cloudinary.ts
+   |  |  └── db.ts
+   |  ├── controllers
+   |  |  ├── adminController.ts
+   |  |  ├── authController.ts
+   |  |  ├── courseController.ts
+   |  |  ├── messageController.ts
+   |  |  ├── notificationController.ts
+   |  |  ├── projectController.ts
+   |  |  ├── serviceController.ts
+   |  |  ├── settingsController.ts
+   |  |  ├── sslController.ts
+   |  |  ├── studentController.ts
+   |  |  └── teamController.ts
+   |  ├── debug-cloudinary.ts
+   |  ├── index.ts
+   |  ├── middleware
+   |  |  ├── authMiddleware.ts
+   |  |  └── rbacMiddleware.ts
+   |  ├── migrate.ts
+   |  ├── models
+   |  |  ├── AuditLog.ts
+   |  |  ├── Course.ts
+   |  |  ├── Enrollment.ts
+   |  |  ├── Message.ts
+   |  |  ├── Notification.ts
+   |  |  ├── Project.ts
+   |  |  ├── Service.ts
+   |  |  ├── Team.ts
+   |  |  └── User.ts
+   |  ├── routes
+   |  |  ├── adminRoutes.ts
+   |  |  ├── authRoutes.ts
+   |  |  ├── courseRoutes.ts
+   |  |  ├── messageRoutes.ts
+   |  |  ├── notificationRoutes.ts
+   |  |  ├── paymentRoutes.ts
+   |  |  ├── projectRoutes.ts
+   |  |  ├── serviceRoutes.ts
+   |  |  ├── settingsRoutes.ts
+   |  |  ├── studentRoutes.ts
+   |  |  ├── teamRoutes.ts
+   |  |  └── uploadRoutes.ts
+   |  ├── seed.ts
+   |  ├── seedAdmin.ts
+   |  ├── types
+   |  |  ├── modules.d.ts
+   |  |  ├── multer-storage-cloudinary.d.ts
+   |  |  └── sslcommerz-lts.d.ts
+   |  └── utils
+   |     └── automation.ts
+   └── tsconfig.json
+
+directory: 1063 file: 3790
+
+ignored: directory (108)
