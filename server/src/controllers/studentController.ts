@@ -7,16 +7,19 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// ── PROFESSIONAL SMTP CONFIGURATION (cPanel) ──────────────────────────────
 const transporter = nodemailer.createTransport({
-  host: 'mail.skillsandscale.com',
-  port: 465,
-  secure: true, // Use SSL
+  host: 'localhost',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
+
 
 // ── HTML RECEIPT TEMPLATE ──────────────────────────────────────────────────
 export const generateReceiptHTML = (enrollment: any): string => {
@@ -42,7 +45,7 @@ export const generateReceiptHTML = (enrollment: any): string => {
 <body>
 <div class="wrapper">
   <div class="header">
-    <h1 style="margin:0; letter-spacing: 2px;">SKILLSANDSCALE</h1>
+    <h1 style="margin:0; letter-spacing: 2px;">SKILLS AND SCALE</h1>
     <p style="opacity: 0.8;">Official Payment Receipt</p>
   </div>
   <div class="content">
@@ -143,9 +146,9 @@ export const sendReceiptEmail = async (req: Request, res: Response) => {
 
     const receiptHTML = generateReceiptHTML(enrollment);
     await transporter.sendMail({
-      from: `"SkillsandScale Academy" <${process.env.EMAIL_USER}>`,
+      from: `"Skills And Scale" <${process.env.EMAIL_USER}>`,
       to: enrollment.personalInfo.email,
-      subject: `Payment Verified — ${enrollment.personalInfo.fullName} | SkillsandScale`,
+      subject: `Payment Receipt — Skills And Scale`,
       html: receiptHTML,
     });
 

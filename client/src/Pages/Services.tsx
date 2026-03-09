@@ -65,7 +65,11 @@ const Services = () => {
           {/* Left: Text Card */}
           <div className="lg:col-span-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[40px] p-12 relative flex flex-col justify-center overflow-hidden min-h-[500px]">
 
-
+            <div className="absolute top-16 left-8 animate-float-slow z-0">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 text-2xl shadow-sm rotate-[-6deg]">
+                🎨
+              </div>
+            </div>
 
             <div className="absolute top-12 right-12 animate-float-medium z-0">
               <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 text-2xl shadow-sm rotate-[12deg]">
@@ -130,6 +134,11 @@ const Services = () => {
           {/* Right: Text Card */}
           <div className="lg:col-span-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[40px] p-12 relative flex flex-col justify-center items-end text-right overflow-hidden min-h-[500px] order-1 lg:order-2">
 
+            <div className="absolute top-12 left-12 animate-float-medium z-0">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 text-2xl shadow-sm rotate-[10deg]">
+                🚀
+              </div>
+            </div>
 
 
             <div className="absolute top-20 right-10 animate-float-slow z-0">

@@ -18,15 +18,17 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const notificationHelper_1 = require("../utils/notificationHelper");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// ── PROFESSIONAL SMTP CONFIGURATION (cPanel) ──────────────────────────────
 const transporter = nodemailer_1.default.createTransport({
-    host: 'mail.skillsandscale.com',
-    port: 465,
-    secure: true, // Use SSL
+    host: 'localhost',
+    port: 587,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false
+    }
 });
 // ── HTML RECEIPT TEMPLATE ──────────────────────────────────────────────────
 const generateReceiptHTML = (enrollment) => {
@@ -53,7 +55,7 @@ const generateReceiptHTML = (enrollment) => {
 <body>
 <div class="wrapper">
   <div class="header">
-    <h1 style="margin:0; letter-spacing: 2px;">SKILLSANDSCALE</h1>
+    <h1 style="margin:0; letter-spacing: 2px;">SKILLS AND SCALE</h1>
     <p style="opacity: 0.8;">Official Payment Receipt</p>
   </div>
   <div class="content">
@@ -140,9 +142,9 @@ const sendReceiptEmail = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
         const receiptHTML = (0, exports.generateReceiptHTML)(enrollment);
         yield transporter.sendMail({
-            from: `"SkillsandScale Academy" <${process.env.EMAIL_USER}>`,
+            from: `"Skills And Scale" <${process.env.EMAIL_USER}>`,
             to: enrollment.personalInfo.email,
-            subject: `Payment Verified — ${enrollment.personalInfo.fullName} | SkillsandScale`,
+            subject: `Payment Receipt — Skills And Scale`,
             html: receiptHTML,
         });
         enrollment.receiptSent = true;
