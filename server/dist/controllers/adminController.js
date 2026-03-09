@@ -116,13 +116,16 @@ const getDashboardStats = (req, res) => __awaiter(void 0, void 0, void 0, functi
             .limit(5)
             .populate('course', 'title price originalPrice');
         const recentList = recentEnrollments.map((enr) => {
-            var _a, _b, _c, _d, _e;
+            var _a, _b, _c, _d;
             return ({
                 name: enr.personalInfo.fullName,
                 course: (_b = (_a = enr.course) === null || _a === void 0 ? void 0 : _a.title) !== null && _b !== void 0 ? _b : 'Unknown Course',
+                // ✅ BDT: ৳ symbol instead of $
                 amount: ((_c = enr.course) === null || _c === void 0 ? void 0 : _c.originalPrice)
-                    ? `$${enr.course.originalPrice}`
-                    : ((_e = (_d = enr.course) === null || _d === void 0 ? void 0 : _d.price) !== null && _e !== void 0 ? _e : '$0'),
+                    ? `৳${enr.course.originalPrice.toLocaleString('en-BD')}`
+                    : ((_d = enr.course) === null || _d === void 0 ? void 0 : _d.price)
+                        ? `৳${parseCoursePrice(enr.course.price).toLocaleString('en-BD')}`
+                        : '৳0',
                 status: enr.status,
                 avatar: enr.personalInfo.fullName.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase(),
             });
@@ -150,7 +153,8 @@ const getDashboardStats = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 title: c.title,
                 students: c.students,
                 rating: c.rating || 0,
-                revenue: `$${rev.toLocaleString()}`,
+                // ✅ BDT: ৳ symbol instead of $
+                revenue: `৳${rev.toLocaleString('en-BD')}`,
             };
         });
         res.status(200).json({

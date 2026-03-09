@@ -18,7 +18,6 @@ export const getDashboardStats = async (req: Request, res: Response) => {
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
-
     const [
       studentCount,
       courseCount,
@@ -49,7 +48,6 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       User.countDocuments({ role: 'user', createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } }),
     ]);
 
-
     const verifiedEnrollments = await Enrollment
       .find({ 'paymentInfo.verificationStatus': 'verified' })
       .populate<{ course: { price: string; originalPrice: number } }>('course', 'price originalPrice');
@@ -68,14 +66,12 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       if (createdAt >= startOfLastMonth && createdAt <= endOfLastMonth) lastMonthRevenue += amount;
     });
 
-
     const growthPct = (current: number, previous: number) =>
       previous === 0 ? 100 : parseFloat((((current - previous) / previous) * 100).toFixed(1));
 
     const revenueGrowth = growthPct(thisMonthRevenue, lastMonthRevenue);
     const studentGrowth = growthPct(thisMonthStudents, lastMonthStudents);
     const enrollmentGrowth = growthPct(thisMonthEnrollments, lastMonthEnrollments);
-
 
     const monthlyRevenue: Record<string, number> = {};
     verifiedEnrollments.forEach((enr: any) => {
@@ -97,7 +93,6 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       };
     });
 
-
     const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const weeklyEnrollments = await Enrollment.find({ createdAt: { $gte: weekAgo } });
@@ -107,7 +102,6 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       weeklyMap[day]++;
     });
     const trafficChart = DAY_LABELS.map((day, i) => ({ day, enrollments: weeklyMap[i] || 0 }));
-
 
     const allVerifiedWithCourse = await Enrollment
       .find({ 'paymentInfo.verificationStatus': 'verified' })
@@ -125,7 +119,6 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       color: COLORS[i % COLORS.length],
     }));
 
-
     const recentEnrollments = await Enrollment
       .find()
       .sort({ createdAt: -1 })
@@ -135,13 +128,15 @@ export const getDashboardStats = async (req: Request, res: Response) => {
     const recentList = recentEnrollments.map((enr: any) => ({
       name: enr.personalInfo.fullName,
       course: enr.course?.title ?? 'Unknown Course',
+      // ✅ BDT: ৳ symbol instead of $
       amount: enr.course?.originalPrice
-        ? `$${enr.course.originalPrice}`
-        : (enr.course?.price ?? '$0'),
+        ? `৳${enr.course.originalPrice.toLocaleString('en-BD')}`
+        : enr.course?.price
+          ? `৳${parseCoursePrice(enr.course.price).toLocaleString('en-BD')}`
+          : '৳0',
       status: enr.status,
       avatar: enr.personalInfo.fullName.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase(),
     }));
-
 
     const topCoursesAgg = await Enrollment.aggregate([
       { $match: { 'paymentInfo.verificationStatus': 'verified' } },
@@ -167,7 +162,8 @@ export const getDashboardStats = async (req: Request, res: Response) => {
         title: c.title,
         students: c.students,
         rating: c.rating || 0,
-        revenue: `$${rev.toLocaleString()}`,
+        // ✅ BDT: ৳ symbol instead of $
+        revenue: `৳${rev.toLocaleString('en-BD')}`,
       };
     });
 
@@ -184,11 +180,9 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       studentGrowth,
       enrollmentGrowth,
 
-
       revenueChart,
       trafficChart,
       enrollmentMix,
-
 
       recentEnrollments: recentList,
       topCourses,
