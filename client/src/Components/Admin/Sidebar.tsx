@@ -76,7 +76,7 @@ const Sidebar = () => {
             <img
               src="/favicon.svg"
               alt="SkillsandScale Logo"
-              className="w-5 h-5 object-contain"
+              className="w-6 h-6 object-contain"
             />
           </div>
           <div>
