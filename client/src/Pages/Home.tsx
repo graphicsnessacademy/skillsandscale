@@ -243,12 +243,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Courses Section (Horizontal Scroll) */}{/* Courses Section (Horizontal Scroll) */}
-      <section id="courses" className="fade-in-section py-16 bg-gray-100 dark:bg-black overflow-hidden">
+      {/* Courses Section (Horizontal Scroll) */}
+      <section id="courses" className="fade-in-section py-20 bg-gray-50 dark:bg-black overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
+            <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm uppercase tracking-[0.3em] mb-3 block">Academy</span>
             <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white font-hind-siliguri">আমাদের কোর্সসমূহ</h2>
-            <p className="mt-5 text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-noto-sans-bengali">
+            <p className="mt-5 text-lg sm:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-noto-sans-bengali">
               আপনার দক্ষতা বাড়াতে আমাদের সেরা কোর্সগুলো দেখুন।
             </p>
           </div>
@@ -260,17 +261,20 @@ const Home = () => {
             onMouseLeave={stopDragging}
             onMouseUp={stopDragging}
             onMouseMove={onMouseMove}
-            className={`flex gap-8 overflow-x-auto pb-12 px-2 scrollbar-hide ${isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory'}`}
+            className={`flex gap-6 sm:gap-8 overflow-x-auto pb-12 pt-4 px-4 sm:px-2 scrollbar-hide ${isDragging ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory'
+              }`}
+            style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
           >
             {courses.map((course) => (
               <div
                 key={course._id}
-                className="min-w-full md:min-w-[calc(50%-16px)] lg:min-w-[calc((100%-64px)/3)] snap-start flex-shrink-0" >
-                <Link to={`/courses/${course._id}`} className="group block h-full select-none ">
-                  <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col ">
+                className="w-[85%] sm:w-[450px] md:w-[48%] lg:w-[31%] snap-start flex-shrink-0"
+              >
+                <Link to={`/courses/${course._id}`} className="group block h-full select-none">
+                  <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col hover:-translate-y-2">
 
                     {/* Image Section */}
-                    <div className="relative h-56 overflow-hidden">
+                    <div className="relative h-48 sm:h-64 overflow-hidden">
                       <img
                         src={course.image}
                         alt={course.title}
@@ -279,64 +283,61 @@ const Home = () => {
                       />
 
                       {/* Category Badge */}
-                      <div className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-600 shadow-sm">
+                      <div className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-600 shadow-sm border border-white/20">
                         {course.category}
                       </div>
 
                       {/* Discount Badge */}
                       {course.discount && course.discount > 0 && (
-                        <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                        <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black shadow-lg animate-pulse">
                           {course.discount}% OFF
                         </div>
                       )}
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-7 flex flex-col flex-grow">
-
+                    <div className="p-6 sm:p-8 flex flex-col flex-grow">
                       {/* Title */}
-                      <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">
+                      <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mb-4 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">
                         {course.title}
                       </h3>
 
                       {/* Meta Info */}
-                      <div className="flex items-center gap-4 text-xs font-bold text-slate-500 dark:text-slate-400 mb-6">
-                        <span className="flex items-center gap-1.5">
-                          <Clock size={16} className="text-indigo-500" /> {course.duration}
+                      <div className="flex items-center justify-between text-[11px] font-black text-slate-500 dark:text-slate-400 mb-6">
+                        <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg">
+                          <Clock size={14} className="text-indigo-500" /> {course.duration}
                         </span>
-                        <span className="flex items-center gap-1.5">
-                          <Users size={16} className="text-emerald-500" /> {course.students}
+                        <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg">
+                          <Users size={14} className="text-emerald-500" /> {course.students}
                         </span>
-                        <span className="flex items-center gap-1.5 text-amber-500">
-                          <Star size={16} fill="currentColor" /> {course.reviews}
+                        <span className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg text-amber-500">
+                          <Star size={14} fill="currentColor" /> {course.reviews}
                         </span>
                       </div>
 
                       {/* Divider */}
-                      <div className="border-t border-slate-100 dark:border-slate-800 mb-5"></div>
+                      <div className="border-t border-slate-100 dark:border-slate-800 mb-6"></div>
 
                       {/* Bottom Row */}
-                      <div className="flex items-end justify-between mt-auto">
-
+                      <div className="flex items-center justify-between mt-auto">
                         {/* Batch */}
                         <div>
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ব্যাচ শুরু</p>
-                          <p className="text-sm font-bold text-slate-900 dark:text-white">{course.nextBatch}</p>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">ব্যাচ শুরু</p>
+                          <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{course.nextBatch}</p>
                         </div>
 
-                        {/* Price (Same Size) */}
-                        <div className="text-right flex items-center gap-3">
-                          {course.originalPrice && course.discount && course.discount > 0 && (
-                            <span className="text-xl font-bold text-slate-400 line-through decoration-red-500 decoration-2">
+                        {/* Price */}
+                        <div className="text-right flex flex-col items-end">
+                          {course.originalPrice && course.discount && (
+                            <span className="text-xs font-bold text-slate-400 line-through mb-0.5">
                               ৳{course.originalPrice}
                             </span>
                           )}
-                          <span className="text-xl font-black text-indigo-600">
+                          <span className="text-lg sm:text-2xl font-black text-indigo-600 leading-none">
                             {course.price}
                           </span>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </Link>
@@ -344,18 +345,25 @@ const Home = () => {
             ))}
 
             {/* View All Card */}
-            <div className="min-w-[50%] lg:min-w-[200px]  flex-shrink-0 flex items-center justify-center">
-              <Link to="/courses" className="flex flex-col items-center gap-2 group text-gray-500 hover:text-blue-600 transition-colors">
-                <div className="w-16 h-16 rounded-full border-2 border-gray-300 dark:border-gray-700 group-hover:border-blue-600 flex items-center justify-center">
-                  <ChevronRight size={32} />
+            <div className="min-w-[70%] sm:min-w-[300px] snap-start flex-shrink-0 flex items-center justify-center pr-10">
+              <Link to="/courses" className="flex flex-col items-center gap-4 group">
+                <div className="w-20 h-20 rounded-[2rem] bg-white dark:bg-slate-900 border-2 border-dashed border-slate-200 dark:border-slate-800 group-hover:border-indigo-500 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20 flex items-center justify-center transition-all duration-300 transform group-hover:rotate-12">
+                  <ChevronRight size={32} className="text-slate-400 group-hover:text-indigo-600" />
                 </div>
-                <span className="font-bold font-hind-siliguri text-xl">সকল কোর্স দেখুন</span>
+                <div className="text-center">
+                  <span className="font-black text-slate-900 dark:text-white text-lg block font-hind-siliguri">সকল কোর্স</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Explore All</span>
+                </div>
               </Link>
             </div>
+
+            {/* CRITICAL: Empty Spacer to prevent the last card from getting cut off */}
+            <div className="min-w-[10px] sm:min-w-[40px] flex-shrink-0"></div>
 
           </div>
         </div>
       </section>
+
       {/* Services Section (Infinite Scroll) */}
       <section id="services" className="fade-in-section py-16 bg-white dark:bg-gray-900 overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
