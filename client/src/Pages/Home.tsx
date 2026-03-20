@@ -327,22 +327,21 @@ const Home = () => {
                       <div className="border-t border-slate-100 dark:border-slate-800 mb-5"></div>
 
                       {/* Bottom Row */}
-                      <div className="flex items-end justify-between mt-auto">
-
+                      <div className="flex items-center justify-between mt-auto">
                         {/* Batch */}
                         <div>
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ব্যাচ শুরু</p>
-                          <p className="text-sm font-bold text-slate-900 dark:text-white">{course.nextBatch}</p>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">ব্যাচ শুরু</p>
+                          <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{course.nextBatch}</p>
                         </div>
 
-                        {/* Price (Same Size) */}
-                        <div className="text-right flex items-center gap-3">
-                          {course.originalPrice && course.discount && course.discount > 0 && (
-                            <span className="text-xl font-bold text-slate-400 line-through decoration-red-500 decoration-2">
+                        {/* Price */}
+                        <div className="text-right flex flex-col items-end">
+                          {course.originalPrice && course.discount && (
+                            <span className="text-xs font-bold text-slate-400 line-through mb-0.5">
                               ৳{course.originalPrice}
                             </span>
                           )}
-                          <span className="text-xl font-black text-indigo-600">
+                          <span className="text-lg sm:text-2xl font-black text-indigo-600 leading-none">
                             {course.price}
                           </span>
                         </div>
