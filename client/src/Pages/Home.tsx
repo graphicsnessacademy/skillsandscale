@@ -240,9 +240,9 @@ const Home = () => {
       </section>
 
       {/* PromoBanner Section */}
-      <section className="fade-in-section py-12">
+      <section className="fade-in-section pb-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative h-64 bg-white dark:bg-black rounded-2xl flex items-center justify-center overflow-hidden ">
+          <div className="relative h-40 sm:h-56 lg:h-64 bg-white dark:bg-black rounded-2xl flex items-center justify-center overflow-hidden">
             {/* UPDATED IMAGE TAG BELOW */}
             <img
               src={PromoCover}
@@ -285,7 +285,7 @@ const Home = () => {
                       <img
                         src={course.image}
                         alt={course.title}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-auto object-cover transform group-hover:scale-110 transition-transform duration-700"
                         draggable="false"
                       />
 
