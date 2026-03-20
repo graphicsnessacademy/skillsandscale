@@ -58,7 +58,8 @@ const Contact = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide font-hind-siliguri">ইমেইল</span>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white font-noto-sans-bengali">contact@skillsandscale.com</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white font-noto-sans-bengali">
+                      <a href="mailto:contact@skillsandscale.com"> contact@skillsandscale.com</a></span>
                   </div>
                 </div>
 
@@ -69,7 +70,7 @@ const Contact = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide font-hind-siliguri">ফোন</span>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white font-noto-sans-bengali">(123) 123-3213-23</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white font-noto-sans-bengali"> <a href="tel: +8801771-276083">(+880) 1771-276083</a></span>
                   </div>
                 </div>
               </div>
