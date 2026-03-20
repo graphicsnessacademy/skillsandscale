@@ -124,17 +124,20 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 py-4 border-t border-gray-200 dark:border-gray-800 font-hind-siliguri">
+        <div className="text-center md:hidden bg-white dark:bg-gray-900 py-4 border-t border-gray-200 dark:border-gray-800 font-hind-siliguri">
           <Link to="/" className={mobileIsActive('/')} onClick={() => setIsMobileMenuOpen(false)}>হোম</Link>
           <Link to="/courses" className={mobileIsActive('/courses')} onClick={() => setIsMobileMenuOpen(false)}>কোর্সসমূহ</Link>
           <Link to="/services" className={mobileIsActive('/services')} onClick={() => setIsMobileMenuOpen(false)}>সার্ভিসসমূহ</Link>
 
-          <div className="px-4 mt-4 grid grid-cols-2 gap-3">
+          <div className="px-10 mt-4">
+           {/* Mobile Menu
             <Link to="/contact" className="block text-center border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2.5 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-lg" onClick={() => setIsMobileMenuOpen(false)}>
               যোগাযোগ
-            </Link>
-            <Link to="/signup" className="block text-center bg-gradient-to-r from-brand-magenta to-brand-violet text-white px-4 py-2.5 rounded-lg font-semibold hover:from-brand-violet hover:to-brand-magenta transition-colors shadow-md text-lg" onClick={() => setIsMobileMenuOpen(false)}>
-              সাইন আপ
+            </Link> 
+            */}
+
+            <Link to="/contact" className="block text-center bg-gradient-to-r from-brand-magenta to-brand-violet text-white px-4 py-2.5 rounded-lg font-semibold hover:from-brand-violet hover:to-brand-magenta transition-colors shadow-md text-lg" onClick={() => setIsMobileMenuOpen(false)}>
+              যোগাযোগ
             </Link>
           </div>
         </div>
