@@ -1254,3 +1254,63 @@
 .dark .main-bg {
   background-color: #111827;
 }
+
+/* Slider Base Styles */
+.course-slider {
+  cursor: grab;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.course-slider.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+/* Card Transitions */
+.course-card {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    shadow 0.4s ease,
+    border-color 0.3s ease;
+}
+
+.course-img {
+  transition: transform 0.7s ease;
+}
+
+.course-title {
+  transition: color 0.3s ease;
+}
+
+.view-all-icon {
+  transition: all 0.3s ease;
+}
+
+/* HOVER EFFECTS - Managed here separately */
+
+.course-link:hover .course-card {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-color: rgba(79, 70, 229, 0.2);
+  /* Indigo-600 with opacity */
+}
+
+.course-link:hover .course-img {
+  transform: scale(1.1);
+}
+
+.course-link:hover .course-title {
+  color: #4f46e6;
+  /* Indigo-600 */
+}
+
+.view-all-link:hover {
+  color: #4f46e6;
+}
+
+.view-all-link:hover .view-all-icon {
+  border-color: #4f46e6;
+  border-style: solid;
+  transform: scale(1.1);
+}
